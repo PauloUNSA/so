@@ -42,5 +42,5 @@ first-time:
 install: bin/kernel.bin
 	sudo cp $< /boot/kernel.bin
 clean:
-	rm -rf $(OBJ_DIR)/* bin/* iso
+	rm -rf $(OBJ_DIR)/* bin/kernel.iso iso
 
