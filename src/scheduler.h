@@ -18,20 +18,23 @@ enum TipoProceso
     IO
 }; // Tipos de ejecución
 // Representación de un proceso
-struct Proceso {
+struct Proceso
+{
     int pid;
     EstadosDeProceso estado;
     int tiempoRestante;
     int prioridad;
-    int tiempos[3] = {0, 0, 0}; // Arreglo de tiempos: {CPU, IO, CPU}
+    int tiempos[3] = {0, 0, 0};            // Arreglo de tiempos: {CPU, IO, CPU}
     TipoProceso tipo[3] = {CPU, CPU, CPU}; // Default: proceso intensivo de CPU
     int etapa = 0;                         // Etapa actual del proceso (0 = primer CPU, 1 = IO, 2 = último CPU)
     // Sobrecarga del operador == para comparar procesos
-    bool operator==(const Proceso &other) const {
+    bool operator==(const Proceso &other) const
+    {
         return this->pid == other.pid;
-        }
+    }
     // Constructor por defecto, para evitar errores
-    Proceso() : pid(0), estado(NEW), prioridad(0) {
+    Proceso() : pid(0), estado(NEW), prioridad(0)
+    {
         tiempos[0] = tiempos[1] = tiempos[2] = 0;
         tipo[0] = tipo[1] = tipo[2] = CPU;
     }
@@ -52,11 +55,11 @@ struct Proceso {
         tiempos[2] = t3;
         tipo[1] = IO;
     }
-
 };
 
 // Scheduler: Planificador simple
-class Scheduler {
+class Scheduler
+{
 private:
     Proceso processQueue[MAX_PROC];
     int cantPro = 0;
@@ -65,8 +68,10 @@ private:
 
 public:
     Screen screen;
-    void addProcess(Proceso p) {
-        if (cantPro < MAX_PROC) {
+    void addProcess(Proceso p)
+    {
+        if (cantPro < MAX_PROC)
+        {
             processQueue[cantPro++] = p;
         }
     }
@@ -97,16 +102,18 @@ public:
                     }
                     else
                         actual.estado = READY;
-                }else {//aplica envejecimineto
-                for (int i = 0; i < cantPro - 1; i++)
+                }
+                else
+                { // aplica envejecimineto
+                    actual.prioridad--;
+                    for (int i = 0; i < cantPro; i++)
+                    {
+                        if (!(actual == processQueue[i]) && processQueue[i].prioridad < 10)
                         {
-                            if (!(actual == processQueue[i]) && processQueue[i].prioridad < 10)
-                            {
-                                processQueue[i].prioridad++;
-                                screen.print("aumento prioridad");
-                            }
+                            processQueue[i].prioridad++;
                         }
-            }
+                    }
+                }
             }
         }
     }
